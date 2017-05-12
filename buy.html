@@ -1,0 +1,241 @@
+<html lang="en" ng-app="myBuyingList">
+<head>
+<title>Buy a New home</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<link rel="stylesheet" href="./MyStyles.css">
+</head>
+<body ng-app="myBuyingList" ng-controller="myCtrl">
+	<div>
+		<nav class="navbar navbar-default ">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed"
+						data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#myPage"> <img class="logo1"
+						src="./images/logo.png" alt="Logo"> <span class="logo-small">BST
+							PROPERTIES INC </span>
+					</a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="#about">ABOUT</a></li>
+						<li><a href="#contact">CONTACT</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+	<br>
+
+	<div class="container-fluid">
+		<div class="row bg-grey" style="width: 100%; margin-left: 2px;">
+			<div class="col-sm-3">
+				<div id="criteria-location">
+					<div class="muted">Location</div>
+					<input type="text" id="criteria-location-input"
+						class="form-control input-md" name="Criteria/LocationBox"
+						placeholder="Enter City, State, Zip, Address or MLS #"
+						locationtype="city,zip code,county,subdivision,school district,mls #,address"
+						autocomplete="off" ng-model="search.addr">
+					<div class="dropdown btn">
+						<button class="btn dropdown-toggle" type="button"
+							data-toggle="dropdown">
+							<i class="glyphicon glyphicon-th-list"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-1" style="margin: 0px;">
+				<span>Price min</span> <input type="text" style="width: 70px;"
+					class="form-control input-md input-block-level ac_input"
+					id="mapsearch-criteria-minprice" name="Criteria/MinPrice" value=""
+					autocomplete="off" ng-model="search.priceMin">
+			</div>
+			<div class="col-xs-1" style="margin: 0px; width: 50px;">
+				<span>To</span>
+			</div>
+			<div class="col-sm-1">
+				<span>Price max</span> <input type="text" style="width: 70px;"
+					class="form-control input-md input-block-level ac_input"
+					id="mapsearch-criteria-maxprice" name="Criteria/MaxPrice" value=""
+					autocomplete="off" ng-model="search.priceMax">
+			</div>
+
+			<div class="col-sm-1" style="margin: 0px;">
+				<span>Beds</span> <select id="mapsearch-criteria-minbeds"
+					name="Criteria/MinBedrooms" ng-model="search.bed"><option
+						value="">Any</option>
+					<option value="1">1+</option>
+					<option value="2">2+</option>
+					<option value="3">3+</option>
+					<option value="4">4+</option>
+					<option value="5">5+</option>
+					<option value="6">6+</option>
+					<option value="7">7+</option>
+					<option value="8">8+</option>
+					<option value="9">9+</option>
+					<option value="10">10+</option>
+					<option value="11">11+</option>
+					<option value="12">12+</option>
+				</select>
+			</div>
+			<div class="col-sm-1">
+				<span>Baths</span> <select id="mapsearch-criteria-minbaths"
+					name="Criteria/MinBathrooms" ng-model="search.bath"><option
+						value="">Any</option>
+					<option value="1">1+</option>
+					<option value="2">2+</option>
+					<option value="3">3+</option>
+					<option value="4">4+</option>
+					<option value="5">5+</option>
+					<option value="6">6+</option>
+					<option value="7">7+</option>
+					<option value="8">8+</option>
+				</select>
+			</div>
+			<div class="col-sm-2" style="padding-top: 20px;">
+
+				<button class="btn" data-toggle="tooltip" ng-click="greaterThan()"
+					data-original-title="Redefine your search by adding filters">
+					More options</button>
+			</div>
+
+			<div class="col-sm-2" style="padding-top: 20px;">
+				<button class="btn btn-primary" ng-click="myFunction()">
+					Search&nbsp;<i class="glyphicon glyphicon-search"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<input type="hidden" name="Criteria/FilterByAddress" value="1">
+	<div class="container-fluid">
+
+
+		<!-- Page Heading/Breadcrumbs -->
+		<div class="row">
+			<div class="col-lg-12">
+
+				<ol class="breadcrumb">
+					<li><a href="home.html">Home</a></li>
+
+				</ol>
+			</div>
+		</div>
+		<!-- /.row -->
+		<!-- Projects Row -->
+		<div class="row">
+			<div class="col-sm-6">
+				<div id="map" style="height: 600px; width: 100%;"></div>
+			</div>
+
+
+
+			<!-- Add Google Maps -->
+			<script src="http://maps.google.com/maps/api/js?sensor=false"
+				type="text/javascript"></script>
+			<script>
+				var locations = [
+						[ 'pexels-photo-164516.jpeg', 33.778212, -84.381415,
+								'$250k', '2 bd 3ba', 4 ],
+						[ 'pexels-photo-106399.jpeg', 33.900827, -84.353341,
+								'$200k', '1 bd 2 ba', 5 ],
+						[ 'pexels-photo-164539.jpeg', 34.041284, -84.324064,
+								'$150k', '1 bd 1 ba', 3 ],
+						[ 'pexels-photo-164522.jpeg', 33.878727, -84.511195,
+								'$160k', '2 bd 2 ba', 2 ],
+						[ 'pexels-photo-164516.jpeg', 33.664672, -84.467440,
+								'$100k', '1 bd 1 ba', 1 ] ];
+
+				var map = new google.maps.Map(document.getElementById('map'), {
+					zoom : 10,
+					center : new google.maps.LatLng(33.7558501, -84.393036),
+					mapTypeId : google.maps.MapTypeId.ROADMAP
+				});
+
+				var infowindow = new google.maps.InfoWindow();
+
+				var marker, i;
+
+				for (i = 0; i < locations.length; i++) {
+
+					marker = new google.maps.Marker({
+						position : new google.maps.LatLng(locations[i][1],
+								locations[i][2]),
+						map : map
+					});
+
+					google.maps.event
+							.addListener(
+									marker,
+									'click',
+									(function(marker, i) {
+										return function() {
+											infowindow
+													.setContent('<div class="row-fluid"><a href="portfolio-item.html"> <div>'
+															+ '<img class="map-image" src="./images/'+ locations[i][0]+ '"></div><div> <span><strong>'
+															+ locations[i][3]
+															+ '</strong></span></div>'
+															+ '<div><p>'
+															+ locations[i][4]
+															+ '</div></a></div>');
+											infowindow.open(map, marker);
+										}
+									})(marker, i));
+				}
+			</script>
+
+
+
+
+			<div class="col-md-3 img-portfolio"
+				ng-repeat="x in addrs  | priceFilter:search | limitTo:4 ">
+				<a href="under.html"> <img class="img-responsive img-hover"
+					style="min-height: 200px;" src="./images/{{ x.image }} " alt="">
+				</a>
+				<h3>
+					{{x.addr}} <br> {{x.city}},{{x.state}} {{x.zip}}
+				</h3>
+				<p>{{x.bed}} Bd | {{x.bath}} Ba</p>
+
+			</div>
+
+
+			<hr>
+
+			<!-- Footer -->
+			<footer class="container-fluid footer1 text-center bg-grey">
+				<a href="#myPage" title="To Top"> <span
+					class="glyphicon glyphicon-chevron-up"></span>
+				</a>
+				<div style="float: left;">
+					<p style="line-height: 120%;">
+						BST Properties, Altanta, US<br>myemail@something.com
+					</p>
+				</div>
+				<div style="float: right;">
+					<p>
+						Designed by © <a href="#" title="Visit Me">BST Properties</a>
+					</p>
+				</div>
+			</footer>
+
+		</div>
+	<script src="buy.js" ></script>
+</body>
+</html>
+
